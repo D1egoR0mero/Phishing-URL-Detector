@@ -116,7 +116,32 @@ def showUser(chance):
     # Tyson Section
     # Show the user the chances of the url being phishing, as a final result
     # Also reasons for why the url is bad or safe
-    print("filler")
+   
+    if chance > 80:
+    #unsafe URL, phishing likely
+         result = "unsafe URL, many signs of phishing persent"
+
+    elif chance > 45:
+    # Possible phishing, warning signs present
+        result = "Possible phishing URL, moderate signs of phishing present"
+
+    elif chance > 10:
+    # Phishing unlikely, few signs present
+        result = "Phishing unlikely, few warning signs present"
+
+    elif chance == 0:
+    #no signs of phishing present, link is safe
+        result = "No signs of phishing present, this URL is safe"
+
+    print(f"Analysis finished, {chance}% chance of phishing\n")
+
+    print(result)
+
+    
+
+
+
+    
 
 
 if __name__ == "__main__":
