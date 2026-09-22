@@ -105,7 +105,7 @@ def analyze(total):
     # calculate the liklihood of a url being phishing and return it as a percentage.
     sum = 0
     for sign in total:
-        sum = sum + sign
+        sum = sum + sign[0]
 
     phishChance = sum/100
     showUser(phishChance)
@@ -116,20 +116,20 @@ def showUser(chance):
     # Tyson Section
     # Show the user the chances of the url being phishing, as a final result
     # Also reasons for why the url is bad or safe
-   
-    if chance > 80:
+    result = ""
+    if chance >= 80:
     #unsafe URL, phishing likely
          result = "unsafe URL, many signs of phishing persent"
 
-    elif chance > 45:
+    elif chance >= 45:
     # Possible phishing, warning signs present
         result = "Possible phishing URL, moderate signs of phishing present"
 
-    elif chance > 10:
+    elif chance >= 10:
     # Phishing unlikely, few signs present
         result = "Phishing unlikely, few warning signs present"
 
-    elif chance == 0:
+    elif chance <= 0:
     #no signs of phishing present, link is safe
         result = "No signs of phishing present, this URL is safe"
 
