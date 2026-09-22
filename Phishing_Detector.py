@@ -19,7 +19,8 @@ URL_SHORTENERS = (
 def main():
     # Kick everything off by opening the GUI.
     # Kiran Section
-    gui()
+    #gui()
+    readFromGUI()
 
 
 def gui():
@@ -30,7 +31,13 @@ def gui():
 def readFromGUI():
     # Diego Section
     # Take the user url and give it to the program so it can parse
-    print("filler")
+    # For demo purposes, we will simply read a line from the terminal and pass it into
+    # parse. 
+
+    user_URL = input("What is the link you want to check? ")
+    total_sign = parse(user_URL)
+    analyze(total_sign)
+    #print("filler")
 
 
 def parse(url):
@@ -93,12 +100,19 @@ def parse(url):
  
     return signs
 
-def analyze():
+def analyze(total):
     # Diego Section
     # calculate the liklihood of a url being phishing and return it as a percentage.
-    print("filler")
+    sum = 0
+    for sign in total:
+        sum = sum + sign
 
-def showUser():
+    phishChance = sum/100
+    showUser(phishChance)
+    
+    
+
+def showUser(chance):
     # Tyson Section
     # Show the user the chances of the url being phishing, as a final result
     # Also reasons for why the url is bad or safe
