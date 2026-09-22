@@ -107,7 +107,7 @@ def analyze(total):
     for sign in total:
         sum = sum + sign[0]
 
-    phishChance = sum/100
+    phishChance = sum
     showUser(phishChance)
     
     
