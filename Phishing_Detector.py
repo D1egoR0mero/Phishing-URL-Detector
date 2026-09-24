@@ -45,9 +45,24 @@ def gui():
     url_frame = tk.Frame(window, bg="#d9d9d9")
     url_frame.pack()
 
-    url_entry = tk.Entry(url_frame, font=("Arial", 18), width=29)
-    url_entry.insert(0, "paste url here")
+    PLACEHOLDER = "paste url here"
+
+    url_entry = tk.Entry(url_frame, font=("Arial", 18), width=29, fg="gray")
+    url_entry.insert(0, PLACEHOLDER)
     url_entry.grid(row=0, column=0, ipady=3)
+
+    def on_focus_in(event):
+        if url_entry.get() == PLACEHOLDER:
+            url_entry.delete(0, "end")
+            url_entry.config(fg="black")
+
+    def on_focus_out(event):
+        if not url_entry.get():
+            url_entry.insert(0, PLACEHOLDER)
+            url_entry.config(fg="gray")
+
+    url_entry.bind("<FocusIn>", on_focus_in)
+    url_entry.bind("<FocusOut>", on_focus_out)
 
     check_button = tk.Button(
         url_frame,
@@ -149,7 +164,7 @@ def gui():
         else:
             details_text.config(text=result)
 
-    # url_entry.bind("<Return>", lambda event: check_url())
+    url_entry.bind("<Return>", lambda event: check_url())
     url_entry.focus()
     window.mainloop()
 
@@ -170,7 +185,7 @@ def parse(url):
     # Take the given URL as a String and check for signs of phishing.
     # Returns a list of (weight, reason) tuples one per warning sign found.
     signs = []
-    parsed = urlparse(url if "://" in url else "http://" + url)
+    parsed = urlparse(url if "://" in url else "https://" + url)
     host = parsed.hostname or ""
  
     # Unusually long URL
@@ -193,7 +208,7 @@ def parse(url):
         signs.append((20, f"Host has many subdomains ({host.count('.')} dots)."))
  
     # Not using HTTPS
-    if parsed.scheme == "http":
+    if url.lower().startswith("http://"):
         signs.append((15, "Connection is not secured with HTTPS."))
  
     # Phishing related keywords anywhere in the URL
