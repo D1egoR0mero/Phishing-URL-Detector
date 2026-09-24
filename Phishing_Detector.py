@@ -54,7 +54,7 @@ def gui():
     def on_focus_in(event):
         if url_entry.get() == PLACEHOLDER:
             url_entry.delete(0, "end")
-            url_entry.config(fg="black")
+            url_entry.config(fg="#1a3d7c")
 
     def on_focus_out(event):
         if not url_entry.get():
@@ -125,11 +125,13 @@ def gui():
     # Show the analysis details below the score.
     details_label = tk.Label(
         window,
-        text="details:",
+        text="Details:",
         anchor="w",
         justify="left",
-        font=("Arial", 11),
+        font=("Arial", 10),
         bg="#d9d9d9",
+        fg="#222222",
+        wraplength=410,
     )
     details_label.pack(fill="x", padx=39)
 
@@ -140,6 +142,7 @@ def gui():
         justify="left",
         font=("Arial", 10),
         bg="#d9d9d9",
+        fg="#222222",
         wraplength=410,
     )
     details_text.pack(fill="x", padx=39, pady=(5, 0))
