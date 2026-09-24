@@ -1,6 +1,7 @@
 ''' Phising Url Detector - Team Compilers '''
 import ipaddress
 from urllib.parse import urlparse
+import tkinter as tk
 
 
 SUSPICIOUS_KEYWORDS = (
@@ -17,16 +18,140 @@ URL_SHORTENERS = (
 )
 
 def main():
-    # Kick everything off by opening the GUI.
-    # Kiran Section
-    #gui()
-    readFromGUI()
+    # Start the application window.
+    gui()
 
 
 def gui():
-    # setup the gui for the user
-    # Kiran/Tyson Section
-    print("filler")
+    import tkinter as tk
+
+    # Create the main window.
+    window = tk.Tk()
+    window.title("Phishing URL Detector")
+    window.geometry("496x456")
+    window.resizable(False, False)
+    window.configure(bg="#d9d9d9")
+
+    # Display the application title.
+    title = tk.Label(
+        window,
+        text="Phishing URL Detector",
+        font=("Arial", 24),
+        bg="#d9d9d9",
+    )
+    title.pack(pady=(28, 34))
+
+    # Create the URL input and check button.
+    url_frame = tk.Frame(window, bg="#d9d9d9")
+    url_frame.pack()
+
+    url_entry = tk.Entry(url_frame, font=("Arial", 18), width=29)
+    url_entry.insert(0, "paste url here")
+    url_entry.grid(row=0, column=0, ipady=3)
+
+    check_button = tk.Button(
+        url_frame,
+        text="Check",
+        # command=lambda: check_url(),
+        font=("Arial", 10),
+        width=7,
+        height=2,
+    )
+    check_button.grid(row=0, column=1, padx=(0, 1))
+
+    # Create the circular score bar and its center text.
+    score_canvas = tk.Canvas(
+        window,
+        width=220,
+        height=220,
+        bg="#d9d9d9",
+        highlightthickness=0,
+    )
+    score_canvas.pack(pady=(10, 17))
+    score_canvas.create_oval(
+        20, 20, 200, 200,
+        outline="#bcbcbc",
+        width=20,
+    )
+    score_arc = score_canvas.create_arc(
+        20, 20, 200, 200,
+        start=90,
+        extent=0,
+        style="arc",
+        outline="#59a65a",
+        width=20,
+    )
+    score_text = score_canvas.create_text(
+        110, 110,
+        text="__ %",
+        font=("Arial", 28),
+        fill="#222222",
+    )
+
+    # Update the bar length and reflective risk colors.
+    def set_score_color(chance):
+        if chance >= 80:
+            colors = ("#ff9999", "#8b0000")
+        elif chance >= 45:
+            colors = ("#ffd699", "#a05200")
+        else:
+            colors = ("#a8e6a3", "#176b24")
+
+        score_canvas.itemconfig(
+            score_arc,
+            extent=-3.6 * chance,
+            outline=colors[0],
+        )
+        score_canvas.itemconfig(
+            score_text,
+            fill=colors[1],
+        )
+
+    # Show the analysis details below the score.
+    details_label = tk.Label(
+        window,
+        text="details:",
+        anchor="w",
+        justify="left",
+        font=("Arial", 11),
+        bg="#d9d9d9",
+    )
+    details_label.pack(fill="x", padx=39)
+
+    details_text = tk.Label(
+        window,
+        text="",
+        anchor="nw",
+        justify="left",
+        font=("Arial", 10),
+        bg="#d9d9d9",
+        wraplength=410,
+    )
+    details_text.pack(fill="x", padx=39, pady=(5, 0))
+
+    # This callback belongs to the diego's handling URL checking.
+    def check_url():
+        url = url_entry.get().strip()
+        if not url or url == "paste url here":
+            score_canvas.itemconfig(score_text, text="__ %")
+            score_canvas.itemconfig(score_arc, extent=0, outline="#59a65a")
+            details_text.config(text="Please enter a URL to check.")
+            return
+
+        signs = parse(url)
+        chance, result = analyze(signs)
+        score_canvas.itemconfig(score_text, text=f"{chance}%")
+        set_score_color(chance)
+
+        if signs:
+            reasons = "\n".join(f"- {reason}" for _, reason in signs)
+            details_text.config(text=f"{result}\n{reasons}")
+        else:
+            details_text.config(text=result)
+
+    # url_entry.bind("<Return>", lambda event: check_url())
+    url_entry.focus()
+    window.mainloop()
 
 def readFromGUI():
     # Diego Section
@@ -101,41 +226,29 @@ def parse(url):
     return signs
 
 def analyze(total):
-    # Diego Section
-    # calculate the liklihood of a url being phishing and return it as a percentage.
-    sum = 0
+    # Calculate the likelihood of a URL being phishing.
+    total_score = 0
     for sign in total:
-        sum = sum + sign[0]
+        total_score += sign[0]
 
-    phishChance = sum
-    showUser(phishChance)
-    
-    
+    phish_chance = min(total_score, 100)
+    result = showUser(phish_chance)
+    return phish_chance, result
 
 def showUser(chance):
-    # Tyson Section
-    # Show the user the chances of the url being phishing, as a final result
-    # Also reasons for why the url is bad or safe
-    result = ""
     if chance >= 80:
-    #unsafe URL, phishing likely
-         result = "unsafe URL, many signs of phishing persent"
+        result = "Unsafe URL: many signs of phishing present."
 
     elif chance >= 45:
-    # Possible phishing, warning signs present
-        result = "Possible phishing URL, moderate signs of phishing present"
+        result = "Possible phishing URL: moderate warning signs present."
 
     elif chance >= 10:
-    # Phishing unlikely, few signs present
-        result = "Phishing unlikely, few warning signs present"
+        result = "Phishing unlikely: a few warning signs are present."
 
-    elif chance <= 0:
-    #no signs of phishing present, link is safe
-        result = "No signs of phishing present, this URL is safe"
+    else:
+        result = "No signs of phishing present. This URL looks safe."
 
-    print(f"Analysis finished, {chance}% chance of phishing\n")
-
-    print(result)
+    return result
 
     
 
