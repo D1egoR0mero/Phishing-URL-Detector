@@ -2,10 +2,10 @@
 
 Authors:
 
-Kiran Nair | PID: kirannair
-Tyson Jones | PID: tysonj
-Diego Romero | PID: diegor456
-William Tran | PID: wllamtrn
+Kiran Nair | PID: kirannair |
+Tyson Jones | PID: tysonj |
+Diego Romero | PID: diegor456 |
+William Tran | PID: wllamtrn |
 
   This project is a program that takes a URL from user input, parses the URL and checks for common signs of phishing, then tells the user the likelihood that the URL is associated with phishing while giving details to justify the result shown. This program solves the problem of people falling victim to phishing scams and losing money and personal information by giving people a way to check the validitiy of URLs that they encounter in their daily life. 
 
